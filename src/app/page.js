@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -16,14 +17,16 @@ export default function Home() {
 
   return (
     <main className="splash-screen" aria-live="polite" aria-label="Loading startup screen">
-      <div className="splash-logo" aria-hidden="true">
-        <div className="splash-ring" />
-        <div className="splash-mark">
-          <span className="splash-n">N</span>
-          <span className="splash-g">G</span>
-        </div>
+      <div className="splash-logo-wrap">
+        <Image
+          src="/logo.jpg"
+          alt="NEXTGen Attendance logo"
+          width={520}
+          height={520}
+          priority
+          className="splash-logo"
+        />
       </div>
-      <p className="splash-text">NEXTGen Attendance</p>
     </main>
   );
 }

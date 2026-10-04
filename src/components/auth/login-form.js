@@ -7,7 +7,7 @@ import FormField from "@/components/auth/form-field";
 
 const initialState = { status: "idle", message: "", fieldErrors: {}, values: {} };
 
-export default function LoginForm() {
+export default function LoginForm({ next = "" }) {
   const [state, action, isPending] = useActionState(signIn, initialState);
   const fieldErrors = state.fieldErrors ?? {};
   const values = state.values ?? {};

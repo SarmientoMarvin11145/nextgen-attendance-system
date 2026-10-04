@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import UpdatePasswordForm from "@/components/auth/update-password-form";
 import { requireAuthenticatedProfile } from "@/lib/auth/authorization";
@@ -9,7 +10,9 @@ export default async function UpdatePasswordPage() {
     <main className="auth-page">
       <section className="auth-panel" aria-labelledby="update-password-title">
         <Link className="brand-lockup" href="/login" aria-label="Return to sign in">
-          <span className="brand-mark" aria-hidden="true">A</span>
+          <span className="brand-mark" aria-hidden="true">
+            <Image src="/logo.jpg" alt="Attendance logo" width={38} height={38} />
+          </span>
           <span><span className="brand-name">Attendance</span><span className="brand-caption">Campus workspace</span></span>
         </Link>
         <p className="eyebrow auth-eyebrow">Account recovery</p>

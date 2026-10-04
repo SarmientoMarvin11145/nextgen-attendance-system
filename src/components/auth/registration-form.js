@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { registerStudent } from "@/app/actions/auth";
 import FormFeedback from "@/components/auth/form-feedback";
 import FormField from "@/components/auth/form-field";
+import { registrationBlocks, registrationCourses, registrationTeams, registrationYears } from "@/lib/auth/registration-options";
 
 const initialState = { status: "idle", message: "", fieldErrors: {}, values: {} };
 
@@ -51,9 +52,7 @@ export default function RegistrationForm() {
         id="course"
         name="course"
         label="Course"
-        autoComplete="organization-title"
-        maxLength={120}
-        placeholder="e.g. Information Technology"
+        options={registrationCourses}
         required
         defaultValue={values.course ?? ""}
         error={fieldErrors.course}
@@ -63,8 +62,7 @@ export default function RegistrationForm() {
           id="year"
           name="year"
           label="Year"
-          maxLength={40}
-          placeholder="e.g. Year 1"
+          options={registrationYears}
           required
           defaultValue={values.year ?? ""}
           error={fieldErrors.year}
@@ -73,8 +71,7 @@ export default function RegistrationForm() {
           id="block"
           name="block"
           label="Block"
-          maxLength={60}
-          placeholder="e.g. Block A"
+          options={registrationBlocks}
           required
           defaultValue={values.block ?? ""}
           error={fieldErrors.block}
@@ -83,8 +80,7 @@ export default function RegistrationForm() {
           id="team"
           name="team"
           label="Team"
-          maxLength={60}
-          placeholder="e.g. Team 1"
+          options={registrationTeams}
           required
           defaultValue={values.team ?? ""}
           error={fieldErrors.team}

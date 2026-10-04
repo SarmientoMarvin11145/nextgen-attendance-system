@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { registrationBlocks, registrationCourses, registrationTeams, registrationYears } from "@/lib/auth/registration-options";
 
 const namePattern = /^[\p{L}\p{M}][\p{L}\p{M} .'-]*$/u;
 const coursePattern = /^[\p{L}\p{N}][\p{L}\p{N}\p{M} .&'()+\/-]*$/u;
@@ -142,15 +143,10 @@ export const registrationSchema = z.object({
   firstName: nameField("First name"),
   lastName: nameField("Last name"),
   email: emailField,
-  course: z
-    .string()
-    .trim()
-    .min(1, "Course is required.")
-    .max(120, "Course must be 120 characters or fewer.")
-    .regex(coursePattern, "Course contains unsupported characters."),
-  year: academicField("Year", 40),
-  block: academicField("Block"),
-  team: academicField("Team"),
+  course: z.enum(registrationCourses),
+  year: z.enum(registrationYears),
+  block: z.enum(registrationBlocks),
+  team: z.enum(registrationTeams),
   password: passwordField,
   confirmPassword: z.string().min(1, "Confirm your password."),
 }).refine((values) => values.password === values.confirmPassword, {

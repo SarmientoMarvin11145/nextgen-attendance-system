@@ -1,15 +1,18 @@
+import Image from "next/image";
 import Link from "next/link";
 import LoginForm from "@/components/auth/login-form";
 import RegistrationForm from "@/components/auth/registration-form";
 
-export default function AuthPage({ mode }) {
+export default function AuthPage({ mode, next = "" }) {
   const isRegister = mode === "register";
 
   return (
     <main className="auth-page">
       <section className={`auth-panel${isRegister ? " auth-panel-register" : ""}`} aria-labelledby="auth-title">
         <Link className="brand-lockup" href="/dashboard" aria-label="Attendance workspace home">
-          <span className="brand-mark" aria-hidden="true">A</span>
+          <span className="brand-mark" aria-hidden="true">
+            <Image src="/logo.jpg" alt="Attendance logo" width={38} height={38} />
+          </span>
           <span>
             <span className="brand-name">Attendance</span>
             <span className="brand-caption">Campus workspace</span>
@@ -30,7 +33,6 @@ export default function AuthPage({ mode }) {
               <Link className="text-link" href="/register">Create a student account</Link>
             </>
           )}
-          <Link href="/dashboard">Return to the workspace</Link>
         </nav>
       </section>
     </main>

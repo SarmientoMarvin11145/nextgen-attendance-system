@@ -31,13 +31,31 @@ async function fetchAllRows(createQuery) {
 export default async function AdminPage() {
   const profile = await requireProfileRole(["officer", "admin"]);
   const supabase = await createSupabaseServerClient();
-  const [{ data: configuredTimeZone }, { data: schoolNow, error: schoolClockError }, { data: activeGates }] = await Promise.all([
-    supabase.rpc("get_school_timezone"),
-    supabase.rpc("get_school_now"),
-    supabase.rpc("list_active_attendance_gates"),
-  ]);
+
+  let configuredTimeZone = "Asia/Manila";
+  let schoolNow = new Date().toISOString();
+  let schoolClockError = null;
+  let activeGates = [];
+
+  try {
+    const results = await Promise.all([
+      supabase.rpc("get_school_timezone"),
+      supabase.rpc("get_school_now"),
+      supabase.rpc("list_active_attendance_gates"),
+    ]);
+    configuredTimeZone = typeof results[0]?.data === "string" ? results[0].data : "Asia/Manila";
+    schoolNow = typeof results[1]?.data === "string" ? results[1].data : new Date().toISOString();
+    schoolClockError = results[1]?.error ?? null;
+    activeGates = results[2]?.data ?? [];
+  } catch {
+    configuredTimeZone = "Asia/Manila";
+    schoolNow = new Date().toISOString();
+    schoolClockError = null;
+    activeGates = [];
+  }
+
   if (schoolClockError || typeof schoolNow !== "string" || !Number.isFinite(Date.parse(schoolNow))) {
-    throw new Error("School clock settings are unavailable.");
+    schoolNow = new Date().toISOString();
   }
   const timeZone = typeof configuredTimeZone === "string" ? configuredTimeZone : "Asia/Manila";
   let sessionsQuery = supabase

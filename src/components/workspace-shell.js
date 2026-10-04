@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "@/app/actions/auth";
@@ -40,7 +41,9 @@ export default function WorkspaceShell({ children, role, unreadNotificationCount
     <div className="workspace-shell">
       <aside className="sidebar">
         <Link className="brand-lockup" href={homeHref} aria-label="Attendance workspace home">
-          <span className="brand-mark" aria-hidden="true">A</span>
+          <span className="brand-mark" aria-hidden="true">
+            <Image src="/logo.jpg" alt="Attendance logo" width={38} height={38} />
+          </span>
           <span>
             <span className="brand-name">Attendance</span>
             <span className="brand-caption">Campus workspace</span>

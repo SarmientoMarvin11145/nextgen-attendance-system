@@ -7,31 +7,50 @@ export default async function DashboardPage() {
   const profile = await requireProfileRole(["student"]);
   const supabase = await createSupabaseServerClient();
 
-  const [profileResult, recordsResult, sessionsResult, timeZoneResult] = await Promise.all([
-    supabase
-      .from("profiles")
-      .select("first_name, last_name, course, year, block, team")
-      .eq("id", profile.id)
-      .maybeSingle(),
-    supabase
-      .from("attendance_records")
-      .select("id, session_id, registered_at, attendance_status, location_verified, verification_method")
-      .eq("student_id", profile.id)
-      .order("registered_at", { ascending: false })
-      .limit(50),
-    supabase
-      .from("attendance_sessions")
-      .select("id, title, start_time, end_time, location_requirement, all_gates")
-      .eq("status", "open")
-      .gt("end_time", new Date().toISOString())
-      .order("start_time", { ascending: true }),
-    supabase.rpc("get_school_timezone"),
-  ]);
+  let profileResult = { data: null, error: null };
+  let recordsResult = { data: [], error: null };
+  let sessionsResult = { data: [], error: null };
+  let timeZoneResult = { data: "Asia/Manila", error: null };
+
+  try {
+    [profileResult, recordsResult, sessionsResult, timeZoneResult] = await Promise.all([
+      supabase
+        .from("profiles")
+        .select("first_name, last_name, course, year, block, team")
+        .eq("id", profile.id)
+        .maybeSingle(),
+      supabase
+        .from("attendance_records")
+        .select("id, session_id, registered_at, attendance_status, location_verified, verification_method")
+        .eq("student_id", profile.id)
+        .order("registered_at", { ascending: false })
+        .limit(50),
+      supabase
+        .from("attendance_sessions")
+        .select("id, title, start_time, end_time, location_requirement, all_gates")
+        .eq("status", "open")
+        .gt("end_time", new Date().toISOString())
+        .order("start_time", { ascending: true }),
+      supabase.rpc("get_school_timezone"),
+    ]);
+  } catch {
+    profileResult = { data: null, error: null };
+    recordsResult = { data: [], error: null };
+    sessionsResult = { data: [], error: null };
+    timeZoneResult = { data: "Asia/Manila", error: null };
+  }
+
   const timeZone = typeof timeZoneResult.data === "string" ? timeZoneResult.data : "Asia/Manila";
-  const { data: gateCounts } = sessionsResult.data?.length
-    ? await supabase.rpc("get_session_gate_counts", { p_session_ids: sessionsResult.data.map((session) => session.id) })
-    : { data: [] };
-  const gateCountsBySession = Object.fromEntries((gateCounts ?? []).map((entry) => [entry.session_id, entry.gate_count]));
+  let gateCountsBySession = {};
+
+  try {
+    const { data: gateCounts } = sessionsResult.data?.length
+      ? await supabase.rpc("get_session_gate_counts", { p_session_ids: sessionsResult.data.map((session) => session.id) })
+      : { data: [] };
+    gateCountsBySession = Object.fromEntries((gateCounts ?? []).map((entry) => [entry.session_id, entry.gate_count]));
+  } catch {
+    gateCountsBySession = {};
+  }
 
   const records = recordsResult.data ?? [];
   const sessionIds = [...new Set(records.map((record) => record.session_id))];
