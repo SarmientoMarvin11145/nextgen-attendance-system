@@ -9,3 +9,4 @@ export default async function LoginPage({ searchParams }) {
     : "";
 
   return <AuthPage mode="login" next={next} />;
+}

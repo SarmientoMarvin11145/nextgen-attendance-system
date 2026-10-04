@@ -2,15 +2,15 @@
 
 :root {
   color-scheme: light;
-  --background: #f2f4ed;
-  --foreground: #1d2923;
-  --surface: #fffefa;
-  --line: #dfe5da;
-  --muted: #738078;
-  --forest: #20392f;
-  --forest-light: #315345;
-  --lime: #d8ec7b;
-  --coral: #e48a70;
+  --background: #f4f9ff;
+  --foreground: #102a43;
+  --surface: #ffffff;
+  --line: #dfeafc;
+  --muted: #5d7aa5;
+  --forest: #0f5ec7;
+  --forest-light: #1d7ae6;
+  --lime: #dfeeff;
+  --coral: #5aa3ff;
 }
 
 @theme inline {
@@ -26,6 +26,95 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), sans-serif;
+}
+
+.splash-screen {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(180deg, #f8fbff 0%, #edf5ff 100%);
+}
+
+.splash-logo {
+  position: relative;
+  width: min(76vw, 520px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  animation: splash-pulse 1.8s ease-in-out infinite;
+}
+
+.splash-ring {
+  position: absolute;
+  inset: 8% 8% 8% 8%;
+  border: 20px solid #0d5ad1;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 12px transparent;
+}
+
+.splash-mark {
+  position: relative;
+  width: 74%;
+  height: 74%;
+  display: grid;
+  place-items: center;
+  color: #0d5ad1;
+}
+
+.splash-mark::before,
+.splash-mark::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  background: #111111;
+}
+
+.splash-mark::before {
+  width: 66%;
+  height: 18%;
+  transform: translateX(-14%) rotate(-35deg);
+  box-shadow: 0 0 0 1px rgba(13, 90, 209, 0.04);
+}
+
+.splash-mark::after {
+  width: 52%;
+  height: 22%;
+  transform: translateX(28%) rotate(58deg);
+}
+
+.splash-n,
+.splash-g {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  line-height: 0.8;
+  letter-spacing: -0.12em;
+  color: #0d5ad1;
+}
+
+.splash-n {
+  font-size: clamp(8.5rem, 19vw, 18rem);
+  transform: translate(-10%, 6%);
+}
+
+.splash-g {
+  font-size: clamp(7.5rem, 17vw, 15rem);
+  transform: translate(17%, 7%);
+}
+
+.splash-text {
+  margin-top: 20px;
+  color: #0d5ad1;
+  font-size: clamp(0.9rem, 2vw, 1.15rem);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+@keyframes splash-pulse {
+  0%, 100% { transform: scale(0.98); opacity: 0.92; }
+  50% { transform: scale(1); opacity: 1; }
 }
 
 a { color: inherit; text-decoration: none; }
